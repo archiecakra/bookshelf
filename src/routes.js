@@ -1,4 +1,6 @@
 const {addBookHandler} = require('./handler');
+const {addBookErrorHandler} = require('./errorHandler');
+const Joi = require('joi');
 
 const routes = [
   // {
@@ -9,6 +11,16 @@ const routes = [
   {
     method: 'POST',
     path: '/books',
+    options: {
+      validate: {
+        payload: Joi.object({
+          name: Joi.string().required(),
+          readPage: Joi.number().max(Joi.ref('pageCount')).required(),
+          pageCount: Joi.number().required(),
+        }),
+        failAction: addBookErrorHandler,
+      },
+    },
     handler: addBookHandler,
   },
   // {
