@@ -1,0 +1,31 @@
+{
+  "name": "bookshelf",
+  "version": "1.0.0",
+  "description": "Dicoding's final project",
+  "main": "server.js",
+  "scripts": {
+    "start-prod": "NODE_ENV=production node ./src/server.js",
+    "start-dev": "nodemon ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archiecakra/bookshelf.git"
+  },
+  "keywords": [
+    "git",
+    "bookshelf",
+    "nodejs",
+    "api",
+    "backend",
+    "javascript"
+  ],
+  "author": "Archie Cakra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/archiecakra/bookshelf/issues"
+  },
+  "homepage": "https://github.com/archiecakra/bookshelf#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
