@@ -1,13 +1,17 @@
-const {addBookHandler} = require('./handler');
+const {
+  addBookHandler,
+  getAllBookHandler,
+  getBookByIdHandler,
+} = require('./handler');
 const {addBookErrorHandler} = require('./errorHandler');
 const Joi = require('joi');
 
 const routes = [
-  // {
-  //   method: 'GET',
-  //   path: '/books',
-  //   handler: getAllBookHandler,
-  // },
+  {
+    method: 'GET',
+    path: '/books',
+    handler: getAllBookHandler,
+  },
   {
     method: 'POST',
     path: '/books',
@@ -15,19 +19,24 @@ const routes = [
       validate: {
         payload: Joi.object({
           name: Joi.string().required(),
+          year: Joi.number().required(),
+          author: Joi.string().required(),
+          summary: Joi.string().required(),
+          publisher: Joi.string().required(),
           readPage: Joi.number().max(Joi.ref('pageCount')).required(),
           pageCount: Joi.number().required(),
+          reading: Joi.boolean().required(),
         }),
         failAction: addBookErrorHandler,
       },
     },
     handler: addBookHandler,
   },
-  // {
-  //   method: 'GET',
-  //   path: '/books/{bookId}',
-  //   handler: getBookByIdHandler,
-  // },
+  {
+    method: 'GET',
+    path: '/books/{bookId}',
+    handler: getBookByIdHandler,
+  },
   // {
   //   method: 'PUT',
   //   path: '/books/{bookId}',

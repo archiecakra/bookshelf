@@ -1,39 +1,48 @@
-const bookShelf = require('./bookshelf');
+const addBookErrorHandler = async (request, h, error) => {
+  console.log(error.details[0]);
+  return handling(error, h);
+};
 
-const handling = (path, h) => {
+const handling = (error, h) => {
+  const path = error.details[0].path[0];
+  const type = error.details[0].type;
+
   switch (path) {
     case 'name':
-      return h.response({
-        status: 'fail',
-        message: 'Gagal menambahkan buku. Mohon isi nama buku',
-      }).code(400).takeover();
-      break;
-    case 'pageCount':
-      return h.response({
-        status: 'fail',
-        // eslint-disable-next-line max-len
-        message: 'Gagal menambahkan buku. pageCount tidak boleh lebih besar dari pageCount',
-      }).code(400).takeover();
+      if (type === 'any.required') {
+        return h.response({
+          status: 'fail',
+          message: 'Gagal menambahkan buku. Mohon isi nama buku',
+        }).code(400).takeover();
+      } else {
+        return h.response({
+          status: 'fail',
+          message: error.message,
+        }).code(400).takeover();
+      }
       break;
     case 'readPage':
-      return h.response({
-        status: 'fail',
-        // eslint-disable-next-line max-len
-        message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
-      }).code(400).takeover();
+      if (type === 'number.max') {
+        return h.response({
+          status: 'fail',
+          // eslint-disable-next-line max-len
+          message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+        }).code(400).takeover();
+      } else {
+        return h.response({
+          status: 'fail',
+          message: error.message,
+        }).code(400).takeover();
+      }
       break;
 
     default:
-      console.log(error);
-      return h.response(error).takeover();
+      return h.response({
+        status: 'fail',
+        message: error.message,
+      }).code(400).takeover();
       break;
   }
-};
-
-const addBookErrorHandler = async (request, h, error) => {
-  const path = error.details[0].path[0];
-  console.log(error.details[0]);
-  return handling(path, h);
 };
 
 module.exports = {addBookErrorHandler};

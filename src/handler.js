@@ -4,13 +4,13 @@ const {nanoid} = require('nanoid');
 const addBookHandler = (request, h) => {
   const {
     name,
-    // year,
-    // author,
-    // summary,
-    // publisher,
+    year,
+    author,
+    summary,
+    publisher,
     pageCount,
     readPage,
-    // reading,
+    reading,
   } = request.payload;
 
   // console.log(request.payload);
@@ -22,10 +22,22 @@ const addBookHandler = (request, h) => {
   const updatedAt = insertedAt;
 
   const newBook = {
-    name, pageCount, readPage, id, finished, insertedAt, updatedAt,
+    id,
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    finished,
+    reading,
+    insertedAt,
+    updatedAt,
   };
 
   bookShelf.push(newBook);
+  console.log(newBook);
 
   const isSuccess = bookShelf.filter((book) => book.id === id).length > 0;
 
@@ -49,4 +61,81 @@ const addBookHandler = (request, h) => {
   }
 };
 
-module.exports = {addBookHandler};
+const getAllBookHandler = (request, h) => {
+  const filterKey = Object.keys(request.query);
+  const filterValue = Object.values(request.query);
+
+  const filterBookShelf = (key, value) => {
+    // return [key, value];
+    let books;
+
+    switch (key) {
+      case 'name':
+        books = bookShelf.filter((book) => {
+          return book[key].toLowerCase().includes(value.toLowerCase());
+        });
+        break;
+      case 'reading':
+      case 'finished':
+        books = bookShelf.filter((book) => {
+          return book[key] === Boolean(parseInt(value));
+        });
+        break;
+
+      default:
+        break;
+    }
+
+    return books;
+  };
+
+  const mapBookShelf = (books) => {
+    return books.map((book) => {
+      return {
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
+      };
+    });
+  };
+
+  if (filterKey.length) {
+    return ({
+      status: 'success',
+      data: {
+        books: mapBookShelf(filterBookShelf(filterKey[0], filterValue[0])),
+      },
+
+    });
+  } else {
+    return ({
+      status: 'success',
+      data: {
+        books: mapBookShelf(bookShelf),
+      },
+    });
+  }
+};
+
+const getBookByIdHandler = (request, h) => {
+  const {bookId} = request.params;
+  const book = bookShelf.filter((book) => book.id === bookId)[0];
+
+  if (book !== undefined) {
+    return {
+      status: 'success',
+      data: {
+        book,
+      },
+    };
+  } else {
+    const response = h.response({
+      status: 'fail',
+      message: 'Buku tidak ditemukan',
+    });
+    response.code(404);
+    return response;
+  }
+};
+
+module.exports = {addBookHandler, getAllBookHandler, getBookByIdHandler};
