@@ -3,6 +3,7 @@ const {
   getAllBookHandler,
   getBookByIdHandler,
   editBookHandler,
+  deleteBookHandler,
 } = require('./handler');
 const {addBookErrorHandler, editBookErrorHandler} = require('./errorHandler');
 const Joi = require('joi');
@@ -58,11 +59,11 @@ const routes = [
     },
     handler: editBookHandler,
   },
-  // {
-  //   method: 'DELETE',
-  //   path: '/books/{bookId}',
-  //   handler: deleteBookHandler,
-  // },
+  {
+    method: 'DELETE',
+    path: '/books/{bookId}',
+    handler: deleteBookHandler,
+  },
 ];
 
 module.exports = routes;
