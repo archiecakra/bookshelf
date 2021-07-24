@@ -138,4 +138,57 @@ const getBookByIdHandler = (request, h) => {
   }
 };
 
-module.exports = {addBookHandler, getAllBookHandler, getBookByIdHandler};
+const editBookHandler = (request, h) => {
+  const {bookId} = request.params;
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = request.payload;
+
+  const finished = readPage === pageCount ? true : false;
+  const updatedAt = new Date().toISOString();
+  const index = bookShelf.findIndex((book) => book.id === bookId);
+
+  if (index !== -1) {
+    bookShelf[index] = {
+      ...bookShelf[index],
+      name,
+      year,
+      author,
+      summary,
+      publisher,
+      pageCount,
+      readPage,
+      reading,
+      updatedAt,
+      finished,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: 'Buku berhasil diperbarui',
+    });
+    response.code(200);
+    return response;
+  } else {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Id tidak ditemukan',
+    });
+    response.code(404);
+    return response;
+  }
+};
+
+module.exports = {
+  addBookHandler,
+  getAllBookHandler,
+  getBookByIdHandler,
+  editBookHandler,
+};
