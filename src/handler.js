@@ -65,8 +65,7 @@ const getAllBookHandler = (request, h) => {
   const filterKey = Object.keys(request.query);
   const filterValue = Object.values(request.query);
 
-  const filterBookShelf = (key, value) => {
-    // return [key, value];
+  const mapBookShelf = (key, value) => {
     let books;
 
     switch (key) {
@@ -83,13 +82,10 @@ const getAllBookHandler = (request, h) => {
         break;
 
       default:
+        books = bookShelf;
         break;
     }
 
-    return books;
-  };
-
-  const mapBookShelf = (books) => {
     return books.map((book) => {
       return {
         id: book.id,
@@ -103,7 +99,7 @@ const getAllBookHandler = (request, h) => {
     return ({
       status: 'success',
       data: {
-        books: mapBookShelf(filterBookShelf(filterKey[0], filterValue[0])),
+        books: mapBookShelf(filterKey[0], filterValue[0]),
       },
 
     });
