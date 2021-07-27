@@ -95,22 +95,13 @@ const getAllBookHandler = (request, h) => {
     });
   };
 
-  if (filterKey.length) {
-    return ({
-      status: 'success',
-      data: {
-        books: mapBookShelf(filterKey[0], filterValue[0]),
-      },
-
-    });
-  } else {
-    return ({
-      status: 'success',
-      data: {
-        books: mapBookShelf(bookShelf),
-      },
-    });
-  }
+  return ({
+    status: 'success',
+    data: {
+      // eslint-disable-next-line max-len
+      books: filterKey.length ? mapBookShelf(filterKey[0], filterValue[0]) : mapBookShelf(bookShelf),
+    },
+  });
 };
 
 const getBookByIdHandler = (request, h) => {
